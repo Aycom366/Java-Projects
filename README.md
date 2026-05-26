@@ -1,3 +1,15 @@
+## Java Learning Projects
+
+This repository contains multiple Java projects, each organized in its own **branch**.
+
+> 💡 Switch branches to explore different projects:
+> ```bash
+> git branch -a        # list all branches
+> git checkout <branch-name>   # switch to a project
+> ```
+
+---
+
 ## Getting Started
 
 Welcome to the VS Code Java world. Here is a guideline to help you get started to write Java code in Visual Studio Code.
