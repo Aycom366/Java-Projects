@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: elearning
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/e_learning
+    username: ay
+    password:
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    database: postgresql
