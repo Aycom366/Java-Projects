@@ -3,6 +3,8 @@ package com.aycom.creatorstore.entities;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -35,7 +37,7 @@ public class OrderItem {
     @Column(name = "price_at_purchase", nullable = false)
     private BigDecimal priceAtPurchase;
 
-    // relation
+    @JsonBackReference // skip me to stop the loop
     @ManyToOne
     @JoinColumn(name = "order_id", nullable = false)
     private Order order;
