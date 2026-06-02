@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,6 +16,7 @@ import com.aycom.feedback_app.dto.organization.CreateOrganizationRequest;
 import com.aycom.feedback_app.dto.organization.CreateOrganizationResponse;
 import com.aycom.feedback_app.dto.organization.InviteMemberToOrganizationRequest;
 import com.aycom.feedback_app.dto.organization.InviteMemberToOrganizationResponse;
+import com.aycom.feedback_app.security.MemberPrincipal;
 import com.aycom.feedback_app.services.OrganizationService;
 
 import jakarta.validation.Valid;
@@ -34,9 +36,12 @@ public class OrganizationController {
 
     @PostMapping("/invite")
     public ResponseEntity<InviteMemberToOrganizationResponse> inviteMemberToOrganization(
+            @AuthenticationPrincipal MemberPrincipal memberPrincipal,
             @Valid @RequestBody InviteMemberToOrganizationRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(
-                organizationService.inviteMemberToOrganization(request.getOrganizationId(), request.getMemberId()));
+                organizationService.inviteMemberToOrganization(memberPrincipal.getOrganizationId(),
+                        request.getMemberId(),
+                        memberPrincipal.getId()));
     }
 
     @GetMapping("/{id}/members")

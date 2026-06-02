@@ -29,6 +29,7 @@ public class OrganizationService {
     private final OrganizationRepository organizationRepository;
     private final MemberOrganizationRepository memberOrganizationRepository;
     private final MemberRepository memberRepository;
+    private final AuthorizationService authorizationService;
 
     public CreateOrganizationResponse getOrganizationById(Long id) {
         Organization organization = organizationRepository.findById(id)
@@ -36,14 +37,17 @@ public class OrganizationService {
         return CreateOrganizationResponse.toOrganization(organization);
     }
 
-    public InviteMemberToOrganizationResponse inviteMemberToOrganization(Long organizationId, Long memberId) {
-        Organization organization = organizationRepository.findById(organizationId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Organization does not exist"));
+    public InviteMemberToOrganizationResponse inviteMemberToOrganization(Long organizationId, Long memberId,
+            Long memberPrincipalId) {
+        Organization organization = authorizationService.requireOrganizationMember(memberPrincipalId, organizationId);
+
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Member does not exist"));
-        if (memberOrganizationRepository.existsByMemberAndOrganization(member, organization)) {
+
+        if (memberOrganizationRepository.existsByMemberIdAndOrganizationId(memberId, organizationId)) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Member is already a member of the organization");
         }
+
         MemberOrganization memberOrganization = MemberOrganization.builder()
                 .member(member)
                 .organization(organization)

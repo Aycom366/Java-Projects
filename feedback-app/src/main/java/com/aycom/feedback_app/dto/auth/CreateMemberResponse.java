@@ -1,4 +1,4 @@
-package com.aycom.feedback_app.dto.member;
+package com.aycom.feedback_app.dto.auth;
 
 import java.time.LocalDateTime;
 

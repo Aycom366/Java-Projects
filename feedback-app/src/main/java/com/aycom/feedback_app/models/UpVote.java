@@ -1,22 +1,19 @@
 package com.aycom.feedback_app.models;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 import org.hibernate.annotations.CreationTimestamp;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -27,27 +24,22 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class FeedbackBoard {
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "feedback_board_item_id", "member_id" }))
+public class UpVote {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private String title;
-
-    @Column(nullable = false)
-    private String description;
-
     @CreationTimestamp
-    private LocalDateTime createdAt;
+    private LocalDateTime upvotedAt;
 
     @ManyToOne
-    @JsonBackReference("org-boards")
-    @JoinColumn(name = "organizationId")
-    private Organization organization;
+    @JoinColumn(name = "feedbackBoardItemId")
+    @JsonBackReference("item-upvotes")
+    private FeedBackBoardItem feedbackBoardItem;
 
-    @OneToMany(mappedBy = "feedbackBoard", cascade = CascadeType.ALL)
-    @JsonManagedReference("board-items")
-    private List<FeedBackBoardItem> feedbackBoardItems;
-
+    @ManyToOne
+    @JoinColumn(name = "memberId")
+    @JsonBackReference("member-upvotes")
+    private Member member;
 }

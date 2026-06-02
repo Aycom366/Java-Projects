@@ -2,9 +2,9 @@ package com.aycom.feedback_app.security;
 
 import java.io.IOException;
 
+import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -40,16 +40,35 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         if (jwtUtil.isTokenValid(token)) {
             String email = jwtUtil.extractEmail(token);
-            UserDetails userDetails = memberService.loadUserByUsername(email);
+            MemberPrincipal principal = (MemberPrincipal) memberService.loadUserByUsername(email);
 
-            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails,
-                    null, userDetails.getAuthorities());
+            String organizationIdHeader = request.getHeader("X-Organization-Id");
+            if (organizationIdHeader == null) {
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+                response.getWriter().write("{\"error\":\"Bad Request\",\"message\":\"X-Organization-Id header is required\"}");
+                return;
+            }
+            principal.setOrganizationId(Long.parseLong(organizationIdHeader));
+
+            /*
+             * Just a data carrier. holds the credentials or a verified identity. also
+             * responding setting the authentication credential into the securityContext
+             * Holder which is later used by the authorization manager to determine if the
+             * user has access to the resource.
+             *
+             */
+            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(principal,
+                    null, principal.getAuthorities());
 
             authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
+
         }
 
         filterChain.doFilter(request, response);
+
     }
+
 }

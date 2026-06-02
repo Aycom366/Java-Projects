@@ -1,22 +1,21 @@
 package com.aycom.feedback_app.models;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 import org.hibernate.annotations.CreationTimestamp;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 
-import jakarta.persistence.CascadeType;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -27,27 +26,30 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class FeedbackBoard {
+public class SubComment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
-    private String title;
-
-    @Column(nullable = false)
-    private String description;
+    private String body;
 
     @CreationTimestamp
     private LocalDateTime createdAt;
 
     @ManyToOne
-    @JsonBackReference("org-boards")
-    @JoinColumn(name = "organizationId")
-    private Organization organization;
+    @JsonBackReference("member-subcomments")
+    @JoinColumn(name = "authorId")
+    private Member author;
 
-    @OneToMany(mappedBy = "feedbackBoard", cascade = CascadeType.ALL)
-    @JsonManagedReference("board-items")
-    private List<FeedBackBoardItem> feedbackBoardItems;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonBackReference("comment-subcomments")
+    @JoinColumn(name = "commentId")
+    private Comment comment;
+
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "parentSubCommentId", nullable = true)
+    private SubComment parentSubComment;
 
 }

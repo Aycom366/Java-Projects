@@ -1,4 +1,4 @@
-package com.aycom.feedback_app.dto.member;
+package com.aycom.feedback_app.dto.auth;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
@@ -12,8 +12,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class CreateMemberRequestDto {
-   
-    @NotNull(message="Name is required")
+
+    @NotNull(message = "Name is required")
     private String name;
 
     @NotNull(message = "Customer email is required")
@@ -23,5 +23,3 @@ public class CreateMemberRequestDto {
     @NotNull(message = "Password is required")
     private String password;
 }
-
-

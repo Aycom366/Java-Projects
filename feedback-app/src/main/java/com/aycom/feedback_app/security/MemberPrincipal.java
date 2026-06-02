@@ -19,6 +19,7 @@ public class MemberPrincipal implements UserDetails {
     private final String name;
     private final String password;
     private final Collection<? extends GrantedAuthority> authorities;
+    private Long organizationId;
 
     public MemberPrincipal(Member member) {
         this.id = member.getId();
