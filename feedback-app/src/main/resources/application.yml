@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: feedback-app
+  datasource:
+    url: jdbc:postgresql://localhost:5432/feedback_app
+    username: ay
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  web:
+    error:
+      include-message: always
+      include-binding-errors: always
