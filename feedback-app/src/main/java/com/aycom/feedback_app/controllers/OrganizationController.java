@@ -45,8 +45,9 @@ public class OrganizationController {
     }
 
     @GetMapping("/{id}/members")
-    public ResponseEntity<List<OrganizationMemberResponse>> getMembersByOrganizationId(@PathVariable Long id) {
-        return ResponseEntity.ok(organizationService.getMembersByOrganizationId(id));
+    public ResponseEntity<List<OrganizationMemberResponse>> getMembersByOrganizationId(@PathVariable Long id,
+            @AuthenticationPrincipal MemberPrincipal memberPrincipal) {
+        return ResponseEntity.ok(organizationService.getMembersByOrganizationId(id, memberPrincipal.getId()));
     }
 
     @GetMapping("/{id}")

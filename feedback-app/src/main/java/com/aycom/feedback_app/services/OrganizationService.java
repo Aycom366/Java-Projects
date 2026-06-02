@@ -26,76 +26,83 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class OrganizationService {
 
-    private final OrganizationRepository organizationRepository;
-    private final MemberOrganizationRepository memberOrganizationRepository;
-    private final MemberRepository memberRepository;
-    private final AuthorizationService authorizationService;
+        private final OrganizationRepository organizationRepository;
+        private final MemberOrganizationRepository memberOrganizationRepository;
+        private final MemberRepository memberRepository;
+        private final AuthorizationService authorizationService;
 
-    public CreateOrganizationResponse getOrganizationById(Long id) {
-        Organization organization = organizationRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Organization does not exist"));
-        return CreateOrganizationResponse.toOrganization(organization);
-    }
-
-    public InviteMemberToOrganizationResponse inviteMemberToOrganization(Long organizationId, Long memberId,
-            Long memberPrincipalId) {
-        Organization organization = authorizationService.requireOrganizationMember(memberPrincipalId, organizationId);
-
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Member does not exist"));
-
-        if (memberOrganizationRepository.existsByMemberIdAndOrganizationId(memberId, organizationId)) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Member is already a member of the organization");
+        public CreateOrganizationResponse getOrganizationById(Long id) {
+                Organization organization = organizationRepository.findById(id)
+                                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                                                "Organization does not exist"));
+                return CreateOrganizationResponse.toOrganization(organization);
         }
 
-        MemberOrganization memberOrganization = MemberOrganization.builder()
-                .member(member)
-                .organization(organization)
-                .role(RoleEnum.TESTER)
-                .build();
-        memberOrganizationRepository.save(memberOrganization);
+        public InviteMemberToOrganizationResponse inviteMemberToOrganization(Long organizationId, Long memberId,
+                        Long memberPrincipalId) {
+                Organization organization = authorizationService.requireOrganizationMember(memberPrincipalId,
+                                organizationId);
 
-        return InviteMemberToOrganizationResponse.toInviteMemberToOrganization(memberOrganization);
+                Member member = memberRepository.findById(memberId)
+                                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                                                "Member does not exist"));
 
-    }
+                if (memberOrganizationRepository.existsByMemberIdAndOrganizationId(memberId, organizationId)) {
+                        throw new ResponseStatusException(HttpStatus.CONFLICT,
+                                        "Member is already a member of the organization");
+                }
 
-    public List<OrganizationMemberResponse> getMembersByOrganizationId(Long id) {
-        Organization organization = organizationRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Organization does not exist"));
-        return organization.getMemberOrganization().stream()
-                .map(OrganizationMemberResponse::toOrganizationMember)
-                .collect(Collectors.toList());
-    }
+                MemberOrganization memberOrganization = MemberOrganization.builder()
+                                .member(member)
+                                .organization(organization)
+                                .role(RoleEnum.TESTER)
+                                .build();
+                memberOrganizationRepository.save(memberOrganization);
 
-    public List<CreateOrganizationResponse> getAllOrganizations() {
-        return organizationRepository.findAll().stream()
-                .map(CreateOrganizationResponse::toOrganization)
-                .collect(Collectors.toList());
-    }
+                return InviteMemberToOrganizationResponse.toInviteMemberToOrganization(memberOrganization);
 
-    @Transactional
-    public CreateOrganizationResponse createOrganization(CreateOrganizationRequest request) {
-        Member member = memberRepository.findById(request.getMemberId().longValue())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Member does not exist"));
-
-        if (memberOrganizationRepository.existsByMemberAndRole(member, RoleEnum.OWNER)) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Member is already an owner of an organization");
         }
 
-        Organization organization = Organization.builder()
-                .name(request.getName())
-                .build();
+        public List<OrganizationMemberResponse> getMembersByOrganizationId(Long organizationId,
+                        Long memberPrincipalId) {
+                Organization organization = authorizationService.requireOrganizationMember(memberPrincipalId,
+                                organizationId);
+                return organization.getMemberOrganization().stream()
+                                .map(OrganizationMemberResponse::toOrganizationMember)
+                                .collect(Collectors.toList());
+        }
 
-        MemberOrganization memberOrganization = MemberOrganization.builder()
-                .member(member)
-                .organization(organization)
-                .role(RoleEnum.OWNER)
-                .build();
+        public List<CreateOrganizationResponse> getAllOrganizations() {
+                return organizationRepository.findAll().stream()
+                                .map(CreateOrganizationResponse::toOrganization)
+                                .collect(Collectors.toList());
+        }
 
-        organization.setMemberOrganization(List.of(memberOrganization));
+        @Transactional
+        public CreateOrganizationResponse createOrganization(CreateOrganizationRequest request) {
+                Member member = memberRepository.findById(request.getMemberId().longValue())
+                                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                                                "Member does not exist"));
 
-        organizationRepository.save(organization);
+                if (memberOrganizationRepository.existsByMemberAndRole(member, RoleEnum.OWNER)) {
+                        throw new ResponseStatusException(HttpStatus.CONFLICT,
+                                        "Member is already an owner of an organization");
+                }
 
-        return CreateOrganizationResponse.toOrganization(organization);
-    }
+                Organization organization = Organization.builder()
+                                .name(request.getName())
+                                .build();
+
+                MemberOrganization memberOrganization = MemberOrganization.builder()
+                                .member(member)
+                                .organization(organization)
+                                .role(RoleEnum.OWNER)
+                                .build();
+
+                organization.setMemberOrganization(List.of(memberOrganization));
+
+                organizationRepository.save(organization);
+
+                return CreateOrganizationResponse.toOrganization(organization);
+        }
 }

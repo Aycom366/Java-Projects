@@ -2,12 +2,11 @@ spring:
   application:
     name: feedback-app
   datasource:
-    url: jdbc:postgresql://localhost:5432/feedback_app
-    username: ay
-    password:
+    url: ${DATABASE_URL}
   jpa:
+    # validate: Hibernate checks the schema matches entities but never touches it — Flyway owns all changes now
     hibernate:
-      ddl-auto: update
+      ddl-auto: validate
     show-sql: true
   web:
     error:
