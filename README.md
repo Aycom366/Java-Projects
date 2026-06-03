@@ -66,7 +66,7 @@ cd feedback-app
 mvn spring-boot:run
 ```
 
-The API runs on `http://localhost:8080`.
+The API runs on `https://truthful-motivation-production-e3e6.up.railway.app`.
 
 Flyway will automatically create all tables on first run — no SQL scripts to run manually.
 
@@ -95,13 +95,13 @@ X-Organization-Id: <your_organization_id>
 Once the server is running, you can explore and test all endpoints interactively via the built-in Swagger UI:
 
 ```
-http://localhost:8080/swagger-ui/index.html
+https://truthful-motivation-production-e3e6.up.railway.app/swagger-ui/index.html
 ```
 
 The raw OpenAPI JSON spec is also available at:
 
 ```
-http://localhost:8080/v3/api-docs
+https://truthful-motivation-production-e3e6.up.railway.app/v3/api-docs
 ```
 
 To test protected endpoints in Swagger:
