@@ -105,6 +105,7 @@ http://localhost:8080/v3/api-docs
 ```
 
 To test protected endpoints in Swagger:
+
 1. Call `POST /api/auth/login` to get your token.
 2. Click the **Authorize** button (top right of the Swagger page).
 3. Enter your token as `Bearer <your_token>`.
@@ -357,9 +358,30 @@ X-Organization-Id: <org_id>
 #### Get All Feedback Items
 
 ```
-GET /api/feedback/items/all
+GET /api/feedback/items/all?page=1&size=10
 Authorization: Bearer <token>
 X-Organization-Id: <org_id>
+```
+
+**Query params:**
+
+| Param  | Default | Description              |
+| ------ | ------- | ------------------------ |
+| `page` | `1`     | Page number (1-based)    |
+| `size` | `10`    | Number of items per page |
+
+Response `200`:
+
+```json
+{
+  "content": [ ...feedback items... ],
+  "page": {
+    "number": 1,
+    "size": 10,
+    "totalElements": 42,
+    "totalPages": 5
+  }
+}
 ```
 
 #### Delete a Feedback Item
@@ -417,9 +439,30 @@ Response `201`:
 #### Get Comments on a Feedback Item
 
 ```
-GET /api/feedback/item/{feedbackItemId}/comments
+GET /api/feedback/item/{feedbackItemId}/comments?page=1&size=10
 Authorization: Bearer <token>
 X-Organization-Id: <org_id>
+```
+
+**Query params:**
+
+| Param  | Default | Description              |
+| ------ | ------- | ------------------------ |
+| `page` | `1`     | Page number (1-based)    |
+| `size` | `10`    | Number of items per page |
+
+Response `200`:
+
+```json
+{
+  "content": [ ...comments... ],
+  "page": {
+    "number": 1,
+    "size": 10,
+    "totalElements": 24,
+    "totalPages": 3
+  }
+}
 ```
 
 ---
@@ -459,9 +502,30 @@ Response `201`:
 #### Get Replies on a Comment
 
 ```
-GET /api/feedback/item/{feedbackItemId}/comment/{commentId}/subcomments
+GET /api/feedback/item/{feedbackItemId}/comment/{commentId}/subcomments?page=1&size=10
 Authorization: Bearer <token>
 X-Organization-Id: <org_id>
+```
+
+**Query params:**
+
+| Param  | Default | Description              |
+| ------ | ------- | ------------------------ |
+| `page` | `1`     | Page number (1-based)    |
+| `size` | `10`    | Number of items per page |
+
+Response `200`:
+
+```json
+{
+  "content": [ ...replies... ],
+  "page": {
+    "number": 1,
+    "size": 10,
+    "totalElements": 8,
+    "totalPages": 1
+  }
+}
 ```
 
 ---
@@ -471,10 +535,32 @@ X-Organization-Id: <org_id>
 Search for registered users by name or email (useful for finding users to invite):
 
 ```
-GET /api/member?searchQuery=jane
+GET /api/member?searchQuery=jane&page=1&size=10
 ```
 
-Returns a list of matching members. No auth required.
+**Query params:**
+
+| Param         | Default | Description                              |
+| ------------- | ------- | ---------------------------------------- |
+| `searchQuery` | —       | Optional. Filters by email prefix match. |
+| `page`        | `1`     | Page number (1-based)                    |
+| `size`        | `10`    | Number of items per page                 |
+
+No auth required.
+
+Response `200`:
+
+```json
+{
+  "content": [ ...members... ],
+  "page": {
+    "number": 1,
+    "size": 10,
+    "totalElements": 3,
+    "totalPages": 1
+  }
+}
+```
 
 ---
 
