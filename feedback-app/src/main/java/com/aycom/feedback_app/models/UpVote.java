@@ -12,6 +12,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Index;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
@@ -24,7 +25,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "feedback_board_item_id", "member_id" }))
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "feedback_board_item_id",
+        "member_id" }), indexes = @Index(name = "idx_upvote_feedback_board_item_id", columnList = "feedback_board_item_id"))
 public class UpVote {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

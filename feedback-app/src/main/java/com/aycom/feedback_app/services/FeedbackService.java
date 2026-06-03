@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -111,12 +113,12 @@ public class FeedbackService {
                 return CreateFeedbackItemResponse.toDto(feedbackItemWithOrg.item());
         }
 
-        public List<CreateFeedbackItemResponse> getAllFeedbackItems(Long memberId, Long organizationId) {
+        public Page<CreateFeedbackItemResponse> getAllFeedbackItems(Long memberId, Long organizationId,
+                        Pageable pageable) {
                 authorizationService.requireOrganizationMember(memberId, organizationId);
 
-                return feedbackItemRepository.findWithCountsByOrganizationId(organizationId).stream()
-                                .map(CreateFeedbackItemResponse::toDto)
-                                .collect(Collectors.toList());
+                return feedbackItemRepository.findWithCountsByOrganizationId(organizationId, pageable)
+                                .map(CreateFeedbackItemResponse::toDto);
         }
 
         public void deleteFeedbackBoardItem(Long feedbackItemId, Long memberId, Long organizationId) {
@@ -166,13 +168,11 @@ public class FeedbackService {
                 return new FeedbackItemWithOrg(feedBackBoardItem, organization);
         }
 
-        public List<CommentResponse> getCommentsByFeedbackItemId(Long feedbackItemId, Long memberId,
-                        Long organizationId) {
+        public Page<CommentResponse> getCommentsByFeedbackItemId(Long feedbackItemId, Long memberId,
+                        Long organizationId, Pageable pageable) {
                 authorizationService.requireOrganizationMember(memberId, organizationId);
-                return commentRepository.findByFeedbackBoardItemIdWithAuthor(feedbackItemId)
-                                .stream()
-                                .map(CommentResponse::toDto)
-                                .collect(Collectors.toList());
+                return commentRepository.findByFeedbackBoardItemIdWithAuthor(feedbackItemId, pageable)
+                                .map(CommentResponse::toDto);
         }
 
         public SubCommentResponse createSubComment(Long feedbackItemId, Long commentId, Long memberId,
@@ -196,8 +196,8 @@ public class FeedbackService {
 
         }
 
-        public List<SubCommentResponse> getSubCommentsByCommentId(Long feedbackItemId, Long commentId, Long memberId,
-                        Long organizationId) {
+        public Page<SubCommentResponse> getSubCommentsByCommentId(Long feedbackItemId, Long commentId, Long memberId,
+                        Long organizationId, Pageable pageable) {
                 requireFeedbackBoardItem(feedbackItemId, memberId, organizationId);
                 Comment comment = commentRepository.findById(commentId)
                                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
@@ -205,11 +205,8 @@ public class FeedbackService {
 
                 writeJsonFile(comment, "comment.json");
 
-                List<SubComment> subComments = subCommentRepository.findByCommentIdOrderByCreatedAtDesc(commentId);
-
-                return subComments.stream()
-                                .map(SubCommentResponse::toDto)
-                                .collect(Collectors.toList());
+                return subCommentRepository.findByCommentIdOrderByCreatedAtDesc(commentId, pageable)
+                                .map(SubCommentResponse::toDto);
         }
 
         private void writeJsonFile(Object object, String fileName) {

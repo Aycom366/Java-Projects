@@ -14,7 +14,7 @@ public class JWTUtil {
 
     private static final long EXPIRATION_MS = 1000 * 60 * 60;
     private static final SecretKey SECRET_KEY = Keys.hmacShaKeyFor(
-            System.getenv("JWT_SECRET").getBytes());
+            System.getProperty("JWT_SECRET").getBytes());
 
     public String generateToken(String email) {
         return Jwts.builder()

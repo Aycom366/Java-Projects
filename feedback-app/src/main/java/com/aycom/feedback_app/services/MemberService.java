@@ -3,6 +3,8 @@ package com.aycom.feedback_app.services;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.aycom.feedback_app.security.MemberPrincipal;
@@ -33,17 +35,14 @@ public class MemberService implements UserDetailsService {
                 .collect(Collectors.toList());
     }
 
-    public List<CreateMemberResponse> getAllMembers(String searchQuery) {
+    public Page<CreateMemberResponse> getAllMembers(String searchQuery, Pageable pageable) {
         if (searchQuery != null) {
-
-            return memberRepository.findAllByEmailStartingWithIgnoreCase(searchQuery).stream()
-                    .map(CreateMemberResponse::toDto)
-                    .collect(Collectors.toList());
+            return memberRepository.searchByEmailOrName(searchQuery, pageable)
+                    .map(CreateMemberResponse::toDto);
         }
 
-        return memberRepository.findAll().stream()
-                .map(CreateMemberResponse::toDto)
-                .collect(Collectors.toList());
+        return memberRepository.findAll(pageable)
+                .map(CreateMemberResponse::toDto);
     }
 
     @Override

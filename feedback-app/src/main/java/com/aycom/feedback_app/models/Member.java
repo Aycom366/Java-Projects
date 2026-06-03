@@ -13,18 +13,23 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Entity
+@Table(name = "member", indexes = {
+        @Index(name = "idx_member_email", columnList = "email"),
+        @Index(name = "idx_member_name", columnList = "name")
+})
 public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

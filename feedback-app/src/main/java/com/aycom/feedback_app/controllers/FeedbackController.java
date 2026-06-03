@@ -2,6 +2,11 @@ package com.aycom.feedback_app.controllers;
 
 import java.util.List;
 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import com.aycom.feedback_app.dto.PageResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -22,7 +27,6 @@ import com.aycom.feedback_app.dto.feedback.CreateFeedbackItemResponse;
 import com.aycom.feedback_app.dto.feedback.SubCommentRequest;
 import com.aycom.feedback_app.dto.feedback.SubCommentResponse;
 import com.aycom.feedback_app.dto.feedback.UpdateFeedbackBoardItemRequest;
-import com.aycom.feedback_app.models.SubComment;
 import com.aycom.feedback_app.security.MemberPrincipal;
 import com.aycom.feedback_app.services.FeedbackService;
 
@@ -92,10 +96,13 @@ public class FeedbackController {
         }
 
         @GetMapping("/items/all")
-        public ResponseEntity<List<CreateFeedbackItemResponse>> getAllFeedbackItems(
-                        @AuthenticationPrincipal MemberPrincipal memberPrincipal) {
-                return ResponseEntity.ok(feedbackService.getAllFeedbackItems(memberPrincipal.getId(),
-                                memberPrincipal.getOrganizationId()));
+        public ResponseEntity<PageResponse<CreateFeedbackItemResponse>> getAllFeedbackItems(
+                        @AuthenticationPrincipal MemberPrincipal memberPrincipal,
+                        @RequestParam(defaultValue = "1") int page,
+                        @RequestParam(defaultValue = "10") int size) {
+                Pageable pageable = PageRequest.of(page - 1, size);
+                return ResponseEntity.ok(PageResponse.of(feedbackService.getAllFeedbackItems(
+                                memberPrincipal.getId(), memberPrincipal.getOrganizationId(), pageable)));
         }
 
         @PostMapping("/item/{feedbackItemId}/comment")
@@ -107,11 +114,15 @@ public class FeedbackController {
         }
 
         @GetMapping("/item/{feedbackItemId}/comments")
-        public ResponseEntity<List<CommentResponse>> getCommentsByFeedbackItemId(@PathVariable Long feedbackItemId,
-                        @AuthenticationPrincipal MemberPrincipal memberPrincipal) {
-                return ResponseEntity
-                                .ok(feedbackService.getCommentsByFeedbackItemId(feedbackItemId, memberPrincipal.getId(),
-                                                memberPrincipal.getOrganizationId()));
+        public ResponseEntity<PageResponse<CommentResponse>> getCommentsByFeedbackItemId(
+                        @PathVariable Long feedbackItemId,
+                        @AuthenticationPrincipal MemberPrincipal memberPrincipal,
+                        @RequestParam(defaultValue = "1") int page,
+                        @RequestParam(defaultValue = "10") int size) {
+                Pageable pageable = PageRequest.of(page - 1, size);
+                return ResponseEntity.ok(PageResponse.of(feedbackService.getCommentsByFeedbackItemId(
+                                feedbackItemId, memberPrincipal.getId(), memberPrincipal.getOrganizationId(),
+                                pageable)));
         }
 
         @PostMapping("/item/{feedbackItemId}/comment/{commentId}/subcomment")
@@ -127,11 +138,15 @@ public class FeedbackController {
         }
 
         @GetMapping("/item/{feedbackItemId}/comment/{commentId}/subcomments")
-        public ResponseEntity<List<SubCommentResponse>> getSubCommentsByCommentId(@PathVariable Long feedbackItemId,
+        public ResponseEntity<PageResponse<SubCommentResponse>> getSubCommentsByCommentId(
+                        @PathVariable Long feedbackItemId,
                         @PathVariable Long commentId,
-                        @AuthenticationPrincipal MemberPrincipal memberPrincipal) {
-                return ResponseEntity.ok(feedbackService.getSubCommentsByCommentId(feedbackItemId, commentId,
-                                memberPrincipal.getId(), memberPrincipal.getOrganizationId()));
+                        @AuthenticationPrincipal MemberPrincipal memberPrincipal,
+                        @RequestParam(defaultValue = "1") int page,
+                        @RequestParam(defaultValue = "10") int size) {
+                Pageable pageable = PageRequest.of(page - 1, size);
+                return ResponseEntity.ok(PageResponse.of(feedbackService.getSubCommentsByCommentId(feedbackItemId,
+                                commentId, memberPrincipal.getId(), memberPrincipal.getOrganizationId(), pageable)));
         }
 
 }

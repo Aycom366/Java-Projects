@@ -13,6 +13,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Index;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
@@ -24,7 +25,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "member_id", "organization_id" }))
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "member_id",
+        "organization_id" }), indexes = @Index(name = "idx_member_org_member_id", columnList = "member_id"))
 @Entity
 public class MemberOrganization {
     @Id
