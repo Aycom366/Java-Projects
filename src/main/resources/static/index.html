@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Feedback App API</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #373F68;
+      color: #F2F4FF;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+    .card {
+      background: #3A4374;
+      border-radius: 16px;
+      padding: 3rem;
+      max-width: 560px;
+      width: 100%;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    }
+    .badge {
+      display: inline-block;
+      background: #AD1FEA;
+      color: #fff;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      border-radius: 20px;
+      margin-bottom: 1.25rem;
+    }
+    h1 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+      color: #F2F4FF;
+    }
+    p {
+      font-size: 0.95rem;
+      line-height: 1.7;
+      color: #CDD2EE;
+      margin-bottom: 2rem;
+    }
+    .links {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    a {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.85rem 1.25rem;
+      border-radius: 10px;
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 600;
+      transition: opacity 0.15s;
+    }
+    a:hover { opacity: 0.85; }
+    .btn-primary { background: #4661E6; color: #fff; }
+    .btn-secondary { background: #F49F85; color: #373F68; }
+    .btn-ghost {
+      background: rgba(255,255,255,0.08);
+      color: #CDD2EE;
+      border: 1px solid rgba(255,255,255,0.12);
+    }
+    .divider {
+      border: none;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      margin: 2rem 0;
+    }
+    .footer {
+      font-size: 0.8rem;
+      color: #7C91B8;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <span class="badge">Live API</span>
+    <h1>Feedback App Backend</h1>
+    <p>
+      A production-ready multi-tenant REST API built for the
+      <strong>Frontend Mentor Product Feedback</strong> challenge.
+      Register, create your org and board once — then plug it straight into your frontend.
+    </p>
+    <div class="links">
+      <a class="btn-primary" href="/swagger-ui/index.html">
+        View API Docs (Swagger)
+      </a>
+      <a class="btn-secondary" href="https://github.com/Aycom366/Java-Projects/tree/feedback-app" target="_blank" rel="noopener">
+        GitHub — README &amp; Setup Guide
+      </a>
+      <a class="btn-ghost" href="https://www.frontendmentor.io/challenges/product-feedback-app-wbvUYqjR6" target="_blank" rel="noopener">
+        Frontend Mentor Challenge
+      </a>
+    </div>
+    <hr class="divider"/>
+    <p class="footer">Built with Java &amp; Spring Boot &nbsp;·&nbsp; Frontend Mentor challenge backend</p>
+  </div>
+</body>
+</html>

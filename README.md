@@ -68,6 +68,8 @@ mvn spring-boot:run
 
 The API runs on `https://truthful-motivation-production-e3e6.up.railway.app`.
 
+Hit the base URL in your browser and you'll see a landing page with links to the Swagger docs, this repo, and the original Frontend Mentor challenge.
+
 Flyway will automatically create all tables on first run — no SQL scripts to run manually.
 
 ---
