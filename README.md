@@ -566,18 +566,28 @@ Response `200`:
 
 ## Integration Flow (Quick Start for Frontend Devs)
 
-Here's the happy path to get a frontend fully connected:
+This API is **multi-tenant** — meaning every user gets their own private workspace. To make that work, there are two concepts not in the original Frontend Mentor design: **Organization** and **Feedback Board**.
+
+Don't let that scare you. Here's all you need to know:
+
+- **Organization** = your private workspace. You create it once, you get an ID back, you save that ID. Done.
+- **Feedback Board** = a board inside your org where feedback items live. You create one, save its ID. Done.
+
+After those two one-time steps, you never touch them again. Everything else — posting feedback, upvoting, commenting — is exactly what the Frontend Mentor design asks for.
 
 ```
+─── Do this once ──────────────────────────────────────────────
 1. POST /api/auth/register          → create your account
-2. POST /api/auth/login             → get your JWT token
-3. POST /api/organization           → create your org, get org ID
-4. POST /api/feedback               → create a feedback board inside the org
-5. POST /api/feedback/item/create   → post feedback items to that board
-6. GET  /api/feedback/items/all     → fetch all items to display
-7. POST /api/feedback/item/{id}/upvote     → let users upvote
-8. POST /api/feedback/item/{id}/comment   → let users comment
-9. POST /api/organization/invite    → invite teammates into the org
+2. POST /api/auth/login             → get your JWT token (save it)
+3. POST /api/organization           → create your org (save the org ID)
+4. POST /api/feedback               → create a feedback board (save the board ID)
+
+─── This is your app ──────────────────────────────────────────
+5. POST /api/feedback/item/create         → post a feedback item
+6. GET  /api/feedback/items/all           → fetch all items to display
+7. POST /api/feedback/item/{id}/upvote    → toggle upvote
+8. POST /api/feedback/item/{id}/comment   → add a comment
+9. POST /api/organization/invite          → invite teammates into your org
 ```
 
 Every frontend team gets their own isolated org. Your data never mixes with another team's.
