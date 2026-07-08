@@ -66,7 +66,7 @@ cd feedback-app
 mvn spring-boot:run
 ```
 
-The API runs on `https://truthful-motivation-production-e3e6.up.railway.app`.
+The API runs on [https://kuy4p9c5mat9vfd03v347hkb.167.233.162.12.sslip.io/](https://kuy4p9c5mat9vfd03v347hkb.167.233.162.12.sslip.io/).
 
 Hit the base URL in your browser and you'll see a landing page with links to the Swagger docs, this repo, and the original Frontend Mentor challenge.
 
