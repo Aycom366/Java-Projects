@@ -97,13 +97,13 @@ X-Organization-Id: <your_organization_id>
 Once the server is running, you can explore and test all endpoints interactively via the built-in Swagger UI:
 
 ```
-https://truthful-motivation-production-e3e6.up.railway.app/swagger-ui/index.html
+https://kuy4p9c5mat9vfd03v347hkb.167.233.162.12.sslip.io/swagger-ui/index.html
 ```
 
 The raw OpenAPI JSON spec is also available at:
 
 ```
-https://truthful-motivation-production-e3e6.up.railway.app/v3/api-docs
+https://kuy4p9c5mat9vfd03v347hkb.167.233.162.12.sslip.io/v3/api-docs
 ```
 
 To test protected endpoints in Swagger:
